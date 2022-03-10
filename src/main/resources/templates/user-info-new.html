@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User-info</title>
+</head>
+<body>
+<h2>Enter user info</h2>
+<form action="#" th:action="@{/admin/}" th:object="${userToAdd}" th:method="post">
+    <div>
+        <label for="name" th:text="Name"/>
+        <input type="text" th:field="${userToAdd.name}" id="name">
+        <br/>
+        <br/>
+        <label for="lastName" th:text="Lastname"/>
+        <input type="text" th:field="${userToAdd.lastName}" id="lastName">
+        <br/>
+        <br/>
+        <label for="age" th:text="Age"/>
+        <input type="text" th:field="${userToAdd.age}" id="age">
+        <br/>
+        <br/>
+        <label for="email" th:text="Email"/>
+        <input type="text" th:field="${userToAdd.email}" id="email">
+        <br/>
+        <br/>
+        <label for="password" th:text="Password"/>
+        <input type="text" th:field="${userToAdd.password}" id="password">
+        <br/>
+        <br/>
+
+
+
+
+        Add roles
+        <br>
+        <ul>
+            <li th:each="role : ${selectableRoles}">
+                <div>
+                    <input type="checkbox" th:field="${userToAdd.roles}" th:value="${role.getId()}">
+                    <label th:text="${role.getValue()}"></label>
+                </div>
+            </li>
+        </ul>
+
+        <br/>
+        <p><input type="submit" value="Save User"></p>
+    </div>
+</form>
+</body>
+</html>
