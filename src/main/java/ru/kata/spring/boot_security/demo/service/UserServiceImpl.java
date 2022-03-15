@@ -10,14 +10,12 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 
-
-    private final UserRepository userRepository ;
+    private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
 
@@ -27,15 +25,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//    @Autowired
-//    public void setUserRepository(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
-
     @Override
     public User findById(Long id) {
-
-        return userRepository.getById(id);
+        return userRepository.findById(id).get();
     }
 
     @Override
@@ -55,12 +47,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByEmail(String email) {
-       return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public List<Role> findAllRoles() {
         return roleRepository.findAll();
     }
+
+    @Override
+    public Role findByValue(String value) {
+        return roleRepository.findByValue(value);
+    }
+
 
 }

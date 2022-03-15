@@ -1,6 +1,9 @@
 package ru.kata.spring.boot_security.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,16 +11,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.*;
 
 
 @Setter
-@Getter
 
 @Entity
 @Table(name = "users")
@@ -47,17 +47,38 @@ public class User implements UserDetails {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles;
 
     public User() {
     }
 
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         if (roles == null) {
-            roles = new HashSet<>();
+            roles = new ArrayList<>();
         }
         return roles;
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getAge() {
+        return age;
     }
 
     @Override
@@ -67,7 +88,7 @@ public class User implements UserDetails {
     }
 
 
-//    !!!В качестве login используем email!!!
+    //    !!!В качестве login используем email!!!
     @Override
     public String getUsername() {
         return this.email;
@@ -99,5 +120,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 
 }

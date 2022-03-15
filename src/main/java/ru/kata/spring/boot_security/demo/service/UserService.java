@@ -23,4 +23,6 @@ public interface UserService {
 
     List<Role> findAllRoles();
 
+    Role findByValue(String value);
+
 }

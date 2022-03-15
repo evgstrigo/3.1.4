@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-
 @Controller
 @RequestMapping("/user")
 public class UserUserController {
@@ -23,8 +22,9 @@ public class UserUserController {
 
     @GetMapping()
     public String showUserInfoById(Model model, @AuthenticationPrincipal User user) {
-
         model.addAttribute("currentUser", user);
+        model.addAttribute("currentUserRoles", user.getRoles());
         return "user";
     }
+
 }
