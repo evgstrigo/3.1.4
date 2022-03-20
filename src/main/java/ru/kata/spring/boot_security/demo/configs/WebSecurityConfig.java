@@ -37,15 +37,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+
+
+//               !!! Эту строку я добавил временно для отключения авторизации !!!
+                .antMatchers("/**" ).permitAll()
+
+//                .antMatchers("/", "/index").permitAll()    эти 3 строки были для норм работы spring security
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/login")
                 .successHandler(successUserHandler)
-
                 .permitAll()
                 .and()
                 .logout()

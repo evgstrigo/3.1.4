@@ -6,63 +6,7 @@
 </head>
 <body>
 <div th:fragment="deleteModalFragment">
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-         aria-hidden="true">
-        <form class="font-weight-bold text-center" th:action="@{/admin/delete/}" th:method="delete">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Delete user</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
 
-                    <div class="modal-body">
-
-                        <div class="form-group">
-                            <label for="deleteModal_id">ID</label>
-                            <input type="text" class="form-control" id="deleteModal_id"
-                                   name="id" placeholder="ID" readonly/>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="deleteModal_firstName">First name</label>
-                            <input type="text" class="form-control" id="deleteModal_firstName"
-                                   name="name" placeholder="First name" readonly/>
-                        </div>
-                        <div class="form-group">
-                            <label for="deleteModal_lastName">Last name</label>
-                            <input type="text" class="form-control" id="deleteModal_lastName"
-                                   name="lastName" placeholder="Last name" readonly/>
-                        </div>
-                        <div class="form-group">
-                            <label for="deleteModal_age">Age</label>
-                            <input type="text" class="form-control" id="deleteModal_age"
-                                   name="age" placeholder="Age" readonly/>
-                        </div>
-                        <div class="form-group">
-                            <label for="deleteModal_email">Email</label>
-                            <input type="email" class="form-control" id="deleteModal_email"
-                                   placeholder="Email@mail.com" name="email" readonly/>
-                        </div>
-                        <div class="form-group">
-                            <label for="deleteModal_roles">Role</label>
-                            <select multiple class="form-control" id="deleteModal_roles" name="selectedRoles" readonly>
-                                <option th:each="roleToAdd : ${selectableRoles}"
-                                        th:text="${roleToAdd.value}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-danger" value="Delete"/>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
 </body>
 </html>

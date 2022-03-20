@@ -1,9 +1,8 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.Getter;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -21,9 +20,11 @@ public class Role implements GrantedAuthority {
     @Column(name = "id")
     private int id;
 
+
     public int getId() {
         return id;
     }
+
 
     public String getValue() {
         return value;

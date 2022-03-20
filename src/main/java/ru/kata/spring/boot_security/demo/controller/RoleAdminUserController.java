@@ -1,39 +1,55 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
 import java.util.List;
 
 
-
-@Controller
+@RestController
 @RequestMapping("/admin")
-public class AdminUserController {
+public class RoleAdminUserController {
 
     private final UserService userService;
 
-    public AdminUserController(UserService userService) {
+    public RoleAdminUserController(UserService userService) {
         this.userService = userService;
     }
 
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
-
+        return userService.findAll();
     }
 
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") long id) {
+        return userService.findById(id);
+    }
 
+    @PostMapping(value = "/users", consumes = {"application/json"})
+    public User addNewUser(@RequestBody User user) {
+        userService.saveUser(user);
+        System.out.println("User with id = " + user.getId() + " has been added.");
+        return user;
+    }
 
+    @PutMapping("/users")
+    public User updateUser(@RequestBody User user) {
+        userService.saveUser(user);
+        System.out.println("User with id = " + user.getId() + " has been updated.");
+        return user;
+    }
 
-
-
-
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
+        System.out.println("User with id = " + id + " has been deleted.");
+    }
 
 
 //    @GetMapping("/")
@@ -48,40 +64,40 @@ public class AdminUserController {
 //        return "user-list";
 //    }
 
-    @PostMapping("/")
-    public String addUserAndShowAll(@ModelAttribute(name = "userToBeAdded") User userToBeAdded) {
-        PasswordEncoder encoderForDB = new BCryptPasswordEncoder(10);
-        String notEncodedPassword = userToBeAdded.getPassword();
-        userToBeAdded.setPassword(encoderForDB.encode(notEncodedPassword));
-        userService.saveUser(userToBeAdded);
-        return "redirect:/admin/";
-    }
-
-
-    @GetMapping("/findOne")
-    @ResponseBody
-    public User findOne(long id) {
-        return userService.findById(id);
-    }
-
-
-    @PatchMapping ("/update")
-    public String updateUser(User user, @RequestParam("selectedRoles") List<String> roles) {
-        for(String roleValue : roles) {
-            user.getRoles().add(userService.findByValue(roleValue));
-        }
-        PasswordEncoder encoderForDB = new BCryptPasswordEncoder(10);
-        String notEncodedPassword = user.getPassword();
-        user.setPassword(encoderForDB.encode(notEncodedPassword));
-        userService.saveUser(user);
-        return "redirect:/admin/";
-    }
-
-    @DeleteMapping("/delete")
-    public String newDeleteUser(User user) {
-        userService.deleteUser(user.getId());
-        return "redirect:/admin/";
-    }
+//    @PostMapping("/")
+//    public String addUserAndShowAll(@ModelAttribute(name = "userToBeAdded") User userToBeAdded) {
+//        PasswordEncoder encoderForDB = new BCryptPasswordEncoder(10);
+//        String notEncodedPassword = userToBeAdded.getPassword();
+//        userToBeAdded.setPassword(encoderForDB.encode(notEncodedPassword));
+//        userService.saveUser(userToBeAdded);
+//        return "redirect:/admin/";
+//    }
+//
+//
+//    @GetMapping("/findOne")
+//    @ResponseBody
+//    public User findOne(long id) {
+//        return userService.findById(id);
+//    }
+//
+//
+//    @PatchMapping ("/update")
+//    public String updateUser(User user, @RequestParam("selectedRoles") List<String> roles) {
+//        for(String roleValue : roles) {
+//            user.getRoles().add(userService.findByValue(roleValue));
+//        }
+//        PasswordEncoder encoderForDB = new BCryptPasswordEncoder(10);
+//        String notEncodedPassword = user.getPassword();
+//        user.setPassword(encoderForDB.encode(notEncodedPassword));
+//        userService.saveUser(user);
+//        return "redirect:/admin/";
+//    }
+//
+//    @DeleteMapping("/delete")
+//    public String newDeleteUser(User user) {
+//        userService.deleteUser(user.getId());
+//        return "redirect:/admin/";
+//    }
 
 }
 
