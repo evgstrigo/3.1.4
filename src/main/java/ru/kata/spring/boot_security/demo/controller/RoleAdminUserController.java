@@ -22,17 +22,31 @@ public class AdminUserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String findAll(Model model, @AuthenticationPrincipal User user) {
-        User userToBeAdded = new User();
-        List<User> myList = userService.findAll();
-        model.addAttribute("users", myList);
-        model.addAttribute("currentUser", user);
-        model.addAttribute("currentUserRoles", user.getRoles());
-        model.addAttribute("userToBeAdded", userToBeAdded);
-        model.addAttribute("selectableRoles", userService.findAllRoles());
-        return "user-list";
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+
     }
+
+
+
+
+
+
+
+
+
+//    @GetMapping("/")
+//    public String findAll(Model model, @AuthenticationPrincipal User user) {
+//        User userToBeAdded = new User();
+//        List<User> myList = userService.findAll();
+//        model.addAttribute("users", myList);
+//        model.addAttribute("currentUser", user);
+//        model.addAttribute("currentUserRoles", user.getRoles());
+//        model.addAttribute("userToBeAdded", userToBeAdded);
+//        model.addAttribute("selectableRoles", userService.findAllRoles());
+//        return "user-list";
+//    }
 
     @PostMapping("/")
     public String addUserAndShowAll(@ModelAttribute(name = "userToBeAdded") User userToBeAdded) {
