@@ -14,7 +14,17 @@
 </head>
 <body>
 
-<header th:replace="fragments/header :: header">
+<header>
+    <nav class="navbar bg-dark text-white">
+        <span class="text-left">
+            <span class="font-weight-bold " >Юзернейм</span>
+            <span>&nbsp;with&nbsp;roles:&nbsp;</span>
+            <span > РОЛИ </span>
+        </span>
+        <span class="text-right">
+            <a href="/logout" class="text-white-50">Logout</a>
+        </span>
+    </nav>
 </header>
 
 <div class="row no-gutters">
@@ -46,15 +56,14 @@
                     <tbody>
 
                     <tr>
-                        <td th:text="${currentUser.getId()}"></td>
-                        <td th:text="${currentUser.getName()}"></td>
-                        <td th:text="${currentUser.getLastName()}"></td>
-                        <td th:text="${currentUser.getAge()}"></td>
-                        <td th:text="${currentUser.getEmail()}"></td>
+                        <td ></td>
+                        <td ></td>
+                        <td ></td>
+                        <td ></td>
+                        <td ></td>
                         <td>
                             <ul class="list-inline">
-                                <li class="list-inline"
-                                    th:text="${#strings.listJoin(currentUser.getRoles(), ' ')} "></li>
+                                <li class="list-inline"></li>
                             </ul>
                         </td>
                     </tr>

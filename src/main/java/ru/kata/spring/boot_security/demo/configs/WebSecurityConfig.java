@@ -40,11 +40,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 //               !!! Эту строку я добавил временно для отключения авторизации !!!
-                .antMatchers("/**" ).permitAll()
+//                .antMatchers("/**" ).permitAll()
 
-//                .antMatchers("/", "/index").permitAll()    эти 3 строки были для норм работы spring security
-//                .antMatchers("/admin/**").hasRole("ADMIN")
-//                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+
+                // эти 3 строки были для норм работы spring security
+                .antMatchers("/", "/index").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -80,4 +82,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    GrantedAuthorityDefaults grantedAuthorityDefaults() {
 //        return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
 //    }
+
 }
