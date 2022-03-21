@@ -7,11 +7,12 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>KATA CRUD</title>
-    <!--    TODO нужно скрыть столбец с паролем-->
+
     <!--    TODO нужно допилить красоту-->
     <!--    TODO нужно уточнить за ввод пароля (в зашифрованном или нет)-->
     <!--    TODO нужно разобраться с тем, чтобы текущие роли пользователя не сбрасывались-->
-
+    <!--    TODO нужно сделать окно с юзером-->
+    <!--    TODO нужно !!!перенести скрипт в отдельный файл!!!-->
 
 
 </head>
@@ -19,7 +20,7 @@
 <header>
     <nav class="navbar bg-dark text-white">
         <span class="text-left">
-            <span class="font-weight-bold " id="headerUsername" ></span>
+            <span class="font-weight-bold " id="headerUsername"></span>
             <span>&nbsp;with&nbsp;roles:&nbsp;</span>
             <span id="headerRoles"> </span>
         </span>
@@ -60,7 +61,7 @@
                                 <th>Last Name</th>
                                 <th>Age</th>
                                 <th>Email</th>
-                                <th>Password</th>
+                                <!--                                <th>Password</th>   ПАРОЛЬ НЕ ОТОБРАЖАЕМ В ТАБЛИЦЕ-->
                                 <th>Role</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
@@ -252,8 +253,6 @@
     alert('Page is loaded');
 
 
-
-
     // ******************* Обработка header'а // *********************
     let username = document.getElementById('headerUsername');
     let userRoles = document.getElementById('headerRoles');
@@ -262,7 +261,6 @@
         fetch('http://localhost:8080/admin/username')
             .then(response => response.json())
             .then(data => {
-                console.log(data.roles)
                 username.innerText = data.username;
                 userRoles.innerText = data.roles;
             });
@@ -288,8 +286,19 @@
     // const editUserFormRoles = document.getElementById('editUserFormRoles');
 
 
-
     // Открытие EDIT - модального окна и заполнение его данными пользователя
+    let resultPassword = "пароль я пустой";
+
+    function getUserData(id) {
+        console.log('getUserData called')
+        const res = fetch(URL + '/' + id)
+            .then(response => response.json())
+            .then(data => {
+                console.log('У текущего пользователя изначально пароль был' + res)
+                resultPassword = data.passwd;
+            });
+    }
+
     $(document).on('click', '#editBtn', function (event) {
         const line = event.target.parentNode.parentNode;
         const editFormId = line.children[0].innerHTML;
@@ -297,10 +306,9 @@
         const editFormLastName = line.children[2].innerHTML;
         const editFormAge = line.children[3].innerHTML;
         const editFormEmail = line.children[4].innerHTML;
-        const editFormPassword = line.children[5].innerHTML;
-        console.log(line.children[6].innerHTML)
-        const editFormRoles = line.children[6].innerHTML;
-
+        // const editFormPassword = line.children[5].innerHTML;
+        const editFormPassword = '';
+        const editFormRoles = line.children[5].innerHTML;
 
 
         editUserFormId.value = editFormId;
@@ -316,7 +324,7 @@
         if (editFormRoles.includes('USER')) {
             $('#optionUser').attr("selected", "selected")
         }
-
+        getUserData(editUserFormId.value);
         openEditModal();
     });
 
@@ -332,12 +340,23 @@
     })
 
 
+
+
+
+
     // Updating user
     function updateCurrentUser() {
+
+        // проверяем вводился ли пароль
+        if (editUserFormPassword.value !== '') {
+            currentPassword = editUserFormPassword.value;
+        }
+
         let jsonObj = {
             "id": editUserFormId.value,
             "name": editUserFormName.value,
-            "passwd": editUserFormPassword.value,
+            // "passwd": editUserFormPassword.value,
+            "passwd": currentPassword,
             "lastName": editUserFormLastName.value,
             "email": editUserFormEmail.value,
             "age": editUserFormAge.value,
@@ -346,16 +365,20 @@
 
 // Adding roles
         if ($('#editUserFormRoles').val().includes('ADMIN')) {
-            jsonObj['roles'].push({"id": 1,
+            jsonObj['roles'].push({
+                "id": 1,
                 "value": "ADMIN",
-                "authority": "ADMIN"});
+                "authority": "ADMIN"
+            });
         }
 
 // Adding roles
         if ($('#editUserFormRoles').val().includes('USER')) {
-            jsonObj['roles'].push({"id": 2,
+            jsonObj['roles'].push({
+                "id": 2,
                 "value": "USER",
-                "authority": "USER"});
+                "authority": "USER"
+            });
         }
 // //Adding password
 //     editUserFormPassword.value = (editFormPassword == null) ? (line.children[5].innerHTML) : (editFormPassword);
@@ -366,7 +389,6 @@
 // }
 
 
-        console.log(jsonObj);
         fetch(URL, {
             method: 'PUT',
             headers: {
@@ -440,7 +462,6 @@
     }
 
 
-
     // ***************************** CREATING *********************************
     const submitCreateFormBtn = document.getElementById('submitCreateForm')
 
@@ -452,10 +473,7 @@
     const createUserFormRoles = document.getElementById('createUserFormRoles');
 
 
-
-
-
-    submitCreateFormBtn.addEventListener('click', function (event){
+    submitCreateFormBtn.addEventListener('click', function (event) {
         event.preventDefault();
         createUser();
 
@@ -477,15 +495,19 @@
 
 
         if ($('#createUserFormRoles').val().includes('ADMIN')) {
-            jsonObj['roles'].push({"id": 1,
+            jsonObj['roles'].push({
+                "id": 1,
                 "value": "ADMIN",
-                "authority": "ADMIN"});
+                "authority": "ADMIN"
+            });
         }
 
         if ($('#createUserFormRoles').val().includes('USER')) {
-            jsonObj['roles'].push({"id": 2,
+            jsonObj['roles'].push({
+                "id": 2,
                 "value": "USER",
-                "authority": "USER"});
+                "authority": "USER"
+            });
         }
 
         console.log(jsonObj);
@@ -506,16 +528,11 @@
     }
 
 
-
-
-
     // ***************************** UTIL *********************************
 
 
     // Reloading userTable (used each time we make fetch)
     updateUsersData();
-
-
 
 
     // Rendering table
@@ -535,7 +552,7 @@
             htmlString += '<td>' + data[i].lastName + '</td>';
             htmlString += '<td>' + data[i].age + '</td>';
             htmlString += '<td>' + data[i].email + '</td>';
-            htmlString += '<td>' + data[i].passwd + '</td>';
+            // htmlString += '<td>' + data[i].passwd + '</td>';   ПАРОЛЬ УДАЛЁН ИЗ ТАБЛИЦЫ ОТОБРАЖЕНИЯ
             htmlString += '<td>';
             for (ii = 0; ii < data[i].roles.length; ii++) {
                 htmlString += data[i].roles[ii].value + ' ';
@@ -547,11 +564,6 @@
         }
         userContainer.innerHTML = htmlString;
     }
-
-
-
-
-
 
 
 </script>
