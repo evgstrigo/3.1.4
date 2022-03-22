@@ -11,6 +11,8 @@
 
     <!--    TODO нужно разобраться с тем, чтобы текущие роли пользователя не сбрасывались-->
     <!--    TODO OPTIONAL нужно перенести скрипт в отдельный файл -->
+    <!--    TODO у пользователя с 1 ролью не отображается корректно страница USER -->
+
 
 
 </head>
@@ -314,6 +316,7 @@
         if (editFormRoles.includes('USER')) {
             $('#optionUser').attr("selected", "selected")
         }
+        console.log($("#editUserFormRoles")[0])
         openEditModal();
     });
 
@@ -386,12 +389,7 @@
     }
 
 
-    // сбрасывание selected ролей пользователя после закрытия модального окна
-    $("#modalWindow").on("hidden.bs.modal", function () {
-        console.log('Modal closed')
-        // console.log($("#editUserFormRoles")[0])
-        $('#optionAdmin').attr("selected", "false")
-    });
+
 
     // ***************************** DELETING *********************************
 

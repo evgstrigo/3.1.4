@@ -58,12 +58,16 @@ public class RoleAdminUserController {
 
         // обработка сырого пароля
         String rawPassword = user.getPassword();
+        System.out.println("rawPassword = " + rawPassword);
         if (rawPassword.equals("")) {
+            System.out.println("При редактировании пользователя пароль не менялся");
             String oldPassword = userService.findById(user.getId()).getPassword();
             user.setPasswd(oldPassword);
-
+            System.out.println("oldPassword = " + oldPassword);
+        } else {
+            user.setPasswd(myPasswordEncoder.encode(rawPassword));
         }
-        user.setPasswd(myPasswordEncoder.encode(rawPassword));
+
         userService.saveUser(user);
         System.out.println("User with id = " + user.getId() + " has been updated.");
         return user;
@@ -74,8 +78,6 @@ public class RoleAdminUserController {
         userService.deleteUser(id);
         System.out.println("User with id = " + id + " has been deleted.");
     }
-
-
 
 
 //    @GetMapping("/")
