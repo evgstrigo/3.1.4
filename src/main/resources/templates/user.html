@@ -17,9 +17,9 @@
 <header>
     <nav class="navbar bg-dark text-white">
         <span class="text-left">
-            <span class="font-weight-bold " >Юзернейм</span>
+            <span class="font-weight-bold " id="headerUsername"></span>
             <span>&nbsp;with&nbsp;roles:&nbsp;</span>
-            <span > РОЛИ </span>
+            <span id="headerRoles"> </span>
         </span>
         <span class="text-right">
             <a href="/logout" class="text-white-50">Logout</a>
@@ -30,7 +30,8 @@
 <div class="row no-gutters">
     <div class="col-2">
         <ul class="list-group w-100">
-            <div sec:authorize="hasRole('ADMIN')">
+<!--            TODO добавить сюда отображение вкладки Admin для пользователя с такой ролью-->
+            <div>
                 <li><a href="/admin/" class="list-group-item">Admin</a></li>
             </div>
             <li><a href="/user" class="list-group-item active">User</a></li>
@@ -53,20 +54,7 @@
                         <th>Role</th>
                     </tr>
                     </thead>
-                    <tbody>
-
-                    <tr>
-                        <td ></td>
-                        <td ></td>
-                        <td ></td>
-                        <td ></td>
-                        <td ></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline"></li>
-                            </ul>
-                        </td>
-                    </tr>
+                    <tbody id="myTable">
                     </tbody>
                 </table>
             </div>
@@ -82,5 +70,57 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script>
+    const URL = "http://localhost:8080/admin/users";
+    const userContainer = document.getElementById('myTable');
+    // ******************* Обработка header'а // *********************
+    let username = document.getElementById('headerUsername');
+    let userRoles = document.getElementById('headerRoles');
+    let userID;
+
+    function getUserAuthandRenderTable() {
+        fetch('http://localhost:8080/admin/username')
+            .then(response => response.json())
+            .then(data => {
+                username.innerText = data.username;
+                userRoles.innerText = data.roles;
+                userID = data.id;
+                console.log(data.id)
+                console.log(userID)
+            }).then(()=>updateUsersData())
+    }
+
+    getUserAuthandRenderTable();
+
+
+
+
+
+    // Rendering table
+    function updateUsersData() {
+        fetch(URL + '/' + userID)
+            .then(response => response.json())
+            .then(data => renderHTML(data))
+    }
+
+    function renderHTML(data) {
+        let htmlString = '';
+            htmlString += '<tr>';
+            htmlString += '<td>' + data.id + '</td>';
+            htmlString += '<td>' + data.name + '</td>';
+            htmlString += '<td>' + data.lastName + '</td>';
+            htmlString += '<td>' + data.age + '</td>';
+            htmlString += '<td>' + data.email + '</td>';
+            htmlString += '<td>';
+            for (i = 0; i < data.roles.length; i++) {
+                htmlString += data.roles[i].value + ' ';
+            }
+            htmlString += '</td>';
+            htmlString += '</tr>';
+
+        userContainer.innerHTML = htmlString;
+    }
+
+</script>
 </body>
 </html>

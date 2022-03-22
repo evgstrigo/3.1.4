@@ -28,6 +28,7 @@ public class UserController {
         System.out.println(user.getRoles());
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode userJSON = mapper.createObjectNode();
+        userJSON.put("id", user.getId());
         userJSON.put("username", user.getUsername());
         StringBuilder rolesString = new StringBuilder();
         for(Role role : user.getRoles()) {

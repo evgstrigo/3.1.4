@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,9 @@ public class RoleAdminUserController {
 
     private final UserService userService;
 
+    @Autowired
+    PasswordEncoder myPasswordEncoder;
+
     public RoleAdminUserController(UserService userService) {
         this.userService = userService;
     }
@@ -39,6 +43,11 @@ public class RoleAdminUserController {
 
     @PostMapping(value = "/users", consumes = {"application/json"})
     public User addNewUser(@RequestBody User user) {
+
+        // обработка сырого пароля
+        String rawPassword = user.getPassword();
+        user.setPasswd(myPasswordEncoder.encode(rawPassword));
+
         userService.saveUser(user);
         System.out.println("User with id = " + user.getId() + " has been added.");
         return user;
@@ -46,6 +55,15 @@ public class RoleAdminUserController {
 
     @PutMapping("/users")
     public User updateUser(@RequestBody User user) {
+
+        // обработка сырого пароля
+        String rawPassword = user.getPassword();
+        if (rawPassword.equals("")) {
+            String oldPassword = userService.findById(user.getId()).getPassword();
+            user.setPasswd(oldPassword);
+
+        }
+        user.setPasswd(myPasswordEncoder.encode(rawPassword));
         userService.saveUser(user);
         System.out.println("User with id = " + user.getId() + " has been updated.");
         return user;

@@ -8,11 +8,9 @@
 
     <title>KATA CRUD</title>
 
-    <!--    TODO нужно допилить красоту-->
-    <!--    TODO нужно уточнить за ввод пароля (в зашифрованном или нет)-->
+
     <!--    TODO нужно разобраться с тем, чтобы текущие роли пользователя не сбрасывались-->
-    <!--    TODO нужно сделать окно с юзером-->
-    <!--    TODO нужно !!!перенести скрипт в отдельный файл!!!-->
+    <!--    TODO OPTIONAL нужно перенести скрипт в отдельный файл -->
 
 
 </head>
@@ -38,7 +36,7 @@
     </div>
 
     <div class="col-10 bg-light">
-        <div class="container-fluid">
+        <div class="container">
             <h2>Admin panel</h2>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
@@ -51,25 +49,29 @@
             <!--    </div>-->
             <div class="tab-content">
                 <div class="tab-pane active" id="adminPane">
-                    <h5>All users</h5>
-                    <div class="bg-white">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Age</th>
-                                <th>Email</th>
-                                <!--                                <th>Password</th>   ПАРОЛЬ НЕ ОТОБРАЖАЕМ В ТАБЛИЦЕ-->
-                                <th>Role</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                            </thead>
-                            <tbody id="myTable">
-                            </tbody>
-                        </table>
+                    <div class="container">
+                        <h5>All users</h5>
+                    </div>
+                    <div class="container bg-white">
+                        <div class="bg-white">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Age</th>
+                                    <th>Email</th>
+                                    <!--                                <th>Password</th>   ПАРОЛЬ НЕ ОТОБРАЖАЕМ В ТАБЛИЦЕ-->
+                                    <th>Role</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody id="myTable">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="createNewUserPane">
@@ -82,12 +84,12 @@
                                     <div class="form-group">
                                         <label for="createUserFormName">First name</label>
                                         <input type="text" class="form-control" id="createUserFormName" name="name"
-                                               placeholder="First name">
+                                               placeholder="First name" >
                                     </div>
                                     <div class="form-group">
                                         <label for="createUserFormLastName">Last name</label>
                                         <input type="text" class="form-control" id="createUserFormLastName"
-                                               placeholder="Last name">
+                                               placeholder="Last name" >
                                     </div>
                                     <div class="form-group">
                                         <label for="createUserFormAge">Age</label>
@@ -102,7 +104,7 @@
                                     <div class="form-group">
                                         <label for="createUserFormPassword">Password</label>
                                         <input type="password" class="form-control" id="createUserFormPassword"
-                                               placeholder="Password">
+                                               placeholder="Password" >
                                     </div>
                                     <div class="form-group">
                                         <label for="createUserFormRoles">Role</label>
@@ -287,17 +289,6 @@
 
 
     // Открытие EDIT - модального окна и заполнение его данными пользователя
-    let resultPassword = "пароль я пустой";
-
-    function getUserData(id) {
-        console.log('getUserData called')
-        const res = fetch(URL + '/' + id)
-            .then(response => response.json())
-            .then(data => {
-                console.log('У текущего пользователя изначально пароль был' + res)
-                resultPassword = data.passwd;
-            });
-    }
 
     $(document).on('click', '#editBtn', function (event) {
         const line = event.target.parentNode.parentNode;
@@ -306,7 +297,6 @@
         const editFormLastName = line.children[2].innerHTML;
         const editFormAge = line.children[3].innerHTML;
         const editFormEmail = line.children[4].innerHTML;
-        // const editFormPassword = line.children[5].innerHTML;
         const editFormPassword = '';
         const editFormRoles = line.children[5].innerHTML;
 
@@ -324,7 +314,6 @@
         if (editFormRoles.includes('USER')) {
             $('#optionUser').attr("selected", "selected")
         }
-        getUserData(editUserFormId.value);
         openEditModal();
     });
 
@@ -340,14 +329,11 @@
     })
 
 
-
-
-
-
     // Updating user
     function updateCurrentUser() {
-
-        // проверяем вводился ли пароль
+        let currentPassword = ''
+        // проверяем вводился ли пароль. если не вводился, отправляем в контроллер юзера с пустым паролем
+        // в контроллере обработаем и при необходимости оставим прежний пароль или зашифруем новый
         if (editUserFormPassword.value !== '') {
             currentPassword = editUserFormPassword.value;
         }
@@ -380,13 +366,7 @@
                 "authority": "USER"
             });
         }
-// //Adding password
-//     editUserFormPassword.value = (editFormPassword == null) ? (line.children[5].innerHTML) : (editFormPassword);
-// if (editFormPassword === null) {
-//     editUserFormPassword.value = ????????????????;
-// } else {
-//     editUserFormPassword.value = editFormPassword;
-// }
+
 
 
         fetch(URL, {
@@ -404,6 +384,14 @@
                 console.error('Error:', error);
             });
     }
+
+
+    // сбрасывание selected ролей пользователя после закрытия модального окна
+    $("#modalWindow").on("hidden.bs.modal", function () {
+        console.log('Modal closed')
+        // console.log($("#editUserFormRoles")[0])
+        $('#optionAdmin').attr("selected", "false")
+    });
 
     // ***************************** DELETING *********************************
 
