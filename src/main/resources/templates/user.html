@@ -31,7 +31,7 @@
     <div class="col-2">
         <ul class="list-group w-100">
             <!--            TODO добавить сюда отображение вкладки Admin для пользователя с такой ролью-->
-            <li><a id="adminButton" href="/admin/" class="list-group-item">Admin</a></li>
+            <li id="adminButton"><a href="/admin/" class="list-group-item">Admin</a></li>
             <li><a href="/user" class="list-group-item active">User</a></li>
         </ul>
     </div>
@@ -75,9 +75,13 @@
     let username = document.getElementById('headerUsername');
     let userRoles = document.getElementById('headerRoles');
     let userID;
+    let userName;
+    let userLastName;
+    let userEmail;
+    let userAge;
 
-    function getUserAuthandRenderTable() {
-        fetch('http://localhost:8080/admin/username')
+    function getUserAuthAndRenderTable() {
+        fetch('http://localhost:8080/username')
             .then(response => response.json())
             .then(data => {
                 username.innerText = data.username;
@@ -85,18 +89,16 @@
                 userID = data.id;
                 console.log(data.id)
                 console.log(userID)
-            }).then(() => updateUsersData())
+                if ( !userRoles.innerText.includes('ADMIN')) {
+                    console.log('No admin')
+                    document.getElementById("adminButton").hidden=true;
+                }
+                renderHTML(data);
+            })
     }
 
-    getUserAuthandRenderTable();
+    getUserAuthAndRenderTable();
 
-
-    // Rendering table
-    function updateUsersData() {
-        fetch(URL + '/' + userID)
-            .then(response => response.json())
-            .then(data => renderHTML(data))
-    }
 
     function renderHTML(data) {
         let htmlString = '';
@@ -106,16 +108,11 @@
         htmlString += '<td>' + data.lastName + '</td>';
         htmlString += '<td>' + data.age + '</td>';
         htmlString += '<td>' + data.email + '</td>';
-        htmlString += '<td>';
-        for (i = 0; i < data.roles.length; i++) {
-            htmlString += data.roles[i].value + ' ';
-        }
+        htmlString += '<td>' + data.roles + '</td>';
         htmlString += '</td>';
         htmlString += '</tr>';
-
         userContainer.innerHTML = htmlString;
     }
-
 
 
 </script>

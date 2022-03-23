@@ -262,7 +262,7 @@
     let userRoles = document.getElementById('headerRoles');
 
     function getUserAuth() {
-        fetch('http://localhost:8080/admin/username')
+        fetch('http://localhost:8080/username')
             .then(response => response.json())
             .then(data => {
                 username.innerText = data.username;

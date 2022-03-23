@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,11 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping (value = "/admin/username")
+
+
+    // в этом методе мы будем передавать на страничку /user сразу все данные залогиненного юзера
+    // иначе были проблемы с доступом к admin/username/ у пользователя без роли  ADMIN
+    @GetMapping (value = "/username")
     @ResponseBody
     public String currentUserName(@AuthenticationPrincipal User user) throws JsonProcessingException {
         System.out.println("Сработал currentUserName");
@@ -29,6 +34,10 @@ public class UserController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode userJSON = mapper.createObjectNode();
         userJSON.put("id", user.getId());
+        userJSON.put("name", user.getName());
+        userJSON.put("lastName", user.getLastName());
+        userJSON.put("email", user.getEmail());
+        userJSON.put("age", user.getAge());
         userJSON.put("username", user.getUsername());
         StringBuilder rolesString = new StringBuilder();
         for(Role role : user.getRoles()) {
