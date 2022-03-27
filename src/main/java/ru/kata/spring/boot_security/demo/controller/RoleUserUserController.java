@@ -24,11 +24,7 @@ public class RoleUserUserController {
     public User getUser(@PathVariable long id) {
         return userService.findById(id);
     }
-//    public String showUserInfoById(Model model, @AuthenticationPrincipal User user) {
-//        model.addAttribute("currentUser", user);
-//        model.addAttribute("currentUserRoles", user.getRoles());
-//        return "user";
-//    }
+
 
 
 }
