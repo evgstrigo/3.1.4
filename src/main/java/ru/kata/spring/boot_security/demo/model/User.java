@@ -39,7 +39,7 @@ public class User implements UserDetails {
 
 
     // удалил из списка PERSIST
-    @ManyToMany(cascade = {DETACH, MERGE, REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {DETACH, MERGE, REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
